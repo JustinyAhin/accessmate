@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import { generateUniqueFourDigitNumber } from '$lib/utils/codes';
 	import { Badge } from '$shadcn/badge';
 	import { Button } from '$shadcn/button';
@@ -7,14 +8,8 @@
 	import { toast } from 'svelte-sonner';
 
 	export let data;
-	export let form;
 
 	$: codes = new Set(data.existingCodes.map((code) => code.code));
-
-	$: if (form?.success) {
-		toast.success(`Code ${newCode} has been set as active`);
-		newCode = undefined;
-	}
 
 	let newCode: number | undefined = undefined;
 
@@ -83,7 +78,20 @@
 				{/each}
 			</div>
 
-			<form method="post" action="?/setNewCode" use:enhance>
+			<form
+				method="post"
+				action="?/setNewCode"
+				use:enhance={() => {
+					return async ({ result }) => {
+						if (result.type === 'success') {
+							invalidateAll();
+							newCode = undefined;
+
+							toast.success(`Code ${newCode} has been set as active`);
+						}
+					};
+				}}
+			>
 				<input type="hidden" name="code" value={newCode} />
 				<Button size="sm" type="submit">Set as Active</Button>
 			</form>
