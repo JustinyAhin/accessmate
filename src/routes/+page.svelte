@@ -16,7 +16,7 @@
 		newCode = undefined;
 	}
 
-	let newCode: number | undefined;
+	let newCode: number | undefined = undefined;
 
 	const generateNewCode = () => {
 		newCode = generateUniqueFourDigitNumber(codes);
@@ -41,6 +41,33 @@
 	<title>Codes | AccessMate</title>
 </svelte:head>
 
+<nav class="mx-auto flex max-w-5xl justify-end px-4 py-4">
+	{#if data.user}
+		<form action="?/logout" method="post" use:enhance>
+			<Button type="submit" variant="secondary" class="flex items-center gap-2">
+				<span>Logout</span>
+
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-log-out size-4 stroke-gray-700"
+					><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline
+						points="16 17 21 12 16 7"
+					/>
+					<line x1="21" x2="9" y1="12" y2="12" />
+				</svg>
+			</Button>
+		</form>
+	{/if}
+</nav>
+
 <div class="mx-auto max-w-5xl space-y-12 px-4 py-16">
 	<Button size="lg" on:click={generateNewCode}>Generate New Code</Button>
 
@@ -56,7 +83,7 @@
 				{/each}
 			</div>
 
-			<form method="post" use:enhance>
+			<form method="post" action="?/setNewCode" use:enhance>
 				<input type="hidden" name="code" value={newCode} />
 				<Button size="sm" type="submit">Set as Active</Button>
 			</form>
