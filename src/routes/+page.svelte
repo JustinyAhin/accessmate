@@ -85,9 +85,9 @@
 					return async ({ result }) => {
 						if (result.type === 'success') {
 							invalidateAll();
-							newCode = undefined;
 
 							toast.success(`Code ${newCode} has been set as active`);
+							newCode = undefined;
 						}
 					};
 				}}
